@@ -12,7 +12,7 @@ public class destructores_estelares {
 	private int alto;
 	int v_movimiento;
 	
-	public destructores_estelares(double x, double y, int antho, int alto, int v_movimiento) {
+	public destructores_estelares(double x, double y, int ancho, int alto, int v_movimiento) {
 		this.x = x;
 		this.y = y;
 		this.ancho = ancho;
@@ -63,6 +63,7 @@ public class destructores_estelares {
 	public void setV_movimiento(int v_movimiento) {
 		this.v_movimiento = v_movimiento;
 	}
+	
 	
 	
 }

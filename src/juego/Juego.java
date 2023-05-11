@@ -3,6 +3,10 @@ package juego;
 
 import java.awt.Image;
 
+import javax.print.event.PrintJobEvent;
+
+import org.jcp.xml.dsig.internal.dom.DOMXMLSignature.DOMSignatureValue;
+
 import entorno.Entorno;
 import entorno.Herramientas;
 import entorno.InterfaceJuego;
@@ -19,6 +23,8 @@ public class Juego extends InterfaceJuego
 	
 	// Variables y métodos propios de cada grupo
 	// ...
+	boolean enPantalla = false;
+
 	
 	Juego()
 	{
@@ -31,8 +37,10 @@ public class Juego extends InterfaceJuego
 		fondo = Herramientas.cargarImagen("fondo.jpg");
 		
 		this.nave = new astro_megaship(entorno.ancho()/2, entorno.alto()-100,70,70,4.0);
-		this.proyectil = new Proyectil(entorno.ancho()/2, entorno.alto()-140,10,4.0);
+		this.proyectil = new Proyectil(entorno.ancho()/2, entorno.alto()-140,10,5);
 		
+
+
 		this.asteroide[0] = new asteroides(0,0,20,1.5);
 		this.asteroide[1] = new asteroides(200,250,20,1.5);
 		this.asteroide[2] = new asteroides(800,0,20,1.5);
@@ -55,7 +63,6 @@ public class Juego extends InterfaceJuego
 		// ...
 		entorno.dibujarImagen(fondo, entorno.ancho()/2, entorno.alto()/2, 0);
 		nave.dibujar(entorno);
-		proyectil.dibujar(entorno);
 
 		
 		for(int i=0; i<asteroide.length; i++)
@@ -71,7 +78,7 @@ public class Juego extends InterfaceJuego
 			nave.moverIzquierda();
 		
 		if(this.nave.getX() + this.nave.getAncho()/2 < entorno.ancho() && entorno.estaPresionada(entorno.TECLA_DERECHA))
-			nave.moverDerecha();
+			nave.moverDerecha(); 
 		
 		if(this.proyectil.getX()/2 - this.proyectil.getRadio()/2 > 0 && entorno.estaPresionada(entorno.TECLA_IZQUIERDA))
 			proyectil.moverIzquierda();
@@ -79,7 +86,21 @@ public class Juego extends InterfaceJuego
 		if(this.proyectil.getX()/2 + this.proyectil.getRadio()/2 < entorno.ancho()/2 && entorno.estaPresionada(entorno.TECLA_DERECHA))
 			proyectil.moverDerecha();			
 		
-			proyectil.mover(entorno);		
+			if(entorno.estaPresionada(entorno.TECLA_ESPACIO) || enPantalla){
+				enPantalla =true;
+				double x = nave.getX();
+				double yProy = proyectil.getY();
+				if(enPantalla){
+					proyectil.dibujar(entorno);
+					proyectil.disparoNave(entorno, x);
+					yProy = proyectil.getY();
+				}
+				if(yProy< 0){
+					enPantalla = false;
+				}
+				
+				
+			}
 	}
 						
 
