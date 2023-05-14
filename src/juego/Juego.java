@@ -1,17 +1,21 @@
 package juego;
 
 
-import java.awt.Image;
 
 import javax.print.event.PrintJobEvent;
 
 import org.jcp.xml.dsig.internal.dom.DOMXMLSignature.DOMSignatureValue;
 
+import java.lang.Math; //? Para números random
+import java.awt.Image; //? Para fondo de pantalla
+
 import entorno.Entorno;
 import entorno.Herramientas;
 import entorno.InterfaceJuego;
 
-public class Juego extends InterfaceJuego
+
+
+public class Juego extends InterfaceJuego{
 	// El objeto Entorno que controla el tiempo y otros
 	private Entorno entorno;
 	private Image fondo;
@@ -22,7 +26,11 @@ public class Juego extends InterfaceJuego
 	
 	// Variables y métodos propios de cada grupo
 	// ...
-	boolean enPantalla = false;
+	boolean enPantalla = false; //? Variable usada para controlar cuándo proyectil se encuentra en pantalla
+	double tiempoInicial = System.currentTimeMillis(); //? Tiempo de inicio de juego, referencia
+
+	int tiempoMinDispEnem = 3000; //? Tiempo mínimo entre disparos enemigos
+	int tiempoMaxDispEnem = 7000; //? Tiempo máximo entre disparos enemigos
 	
 	Juego()
 	{
@@ -71,19 +79,27 @@ public class Juego extends InterfaceJuego
 		asteroide[2].mover_desdeDerecha();
 		asteroide[3].mover_desdeDerecha();
 		
+//* ========== FUNCION DE MOVIMIENTO IZQ | NAVE ASTRO-MEGASHIP ============ */
 		
 		if(this.nave.getX() - this.nave.getAncho()/2 > 0 && entorno.estaPresionada(entorno.TECLA_IZQUIERDA))
 			nave.moverIzquierda();
+
+//* ========== FUNCION DE MOVIMIENTO DER | NAVE ASTRO-MEGASHIP ============ */
 		
 		if(this.nave.getX() + this.nave.getAncho()/2 < entorno.ancho() && entorno.estaPresionada(entorno.TECLA_DERECHA))
 			nave.moverDerecha(); 
+
+//* ========== FUNCION DE MOVIMIENTO IZQ | PROYECTIL ============ */
 		
 		if(this.proyectil.getX()/2 - this.proyectil.getRadio()/2 > 0 && entorno.estaPresionada(entorno.TECLA_IZQUIERDA))
 			proyectil.moverIzquierda();
+//* ========== FUNCION DE MOVIMIENTO DER | PROYECTIL ============ */
 		
 		if(this.proyectil.getX()/2 + this.proyectil.getRadio()/2 < entorno.ancho()/2 && entorno.estaPresionada(entorno.TECLA_DERECHA))
 			proyectil.moverDerecha();			
 		
+
+//* ========== FUNCION DE DISPARO NAVE ASTRO-MEGASHIP ============ */
 			if(entorno.estaPresionada(entorno.TECLA_ESPACIO) || enPantalla){
 				enPantalla =true;
 				double x = nave.getX();
@@ -99,6 +115,12 @@ public class Juego extends InterfaceJuego
 				
 				
 			}
+
+//* ========== FUNCION DE DISPARO RANDOM DESTRUCTORES ESTELARES ============ */
+			if((System.currentTimeMillis()-tiempoInicial)%(int)(Math.random() * (tiempoMaxDispEnem-tiempoMinDispEnem+1)+tiempoMinDispEnem)==0){
+
+			}
+
 	}
 						
 
