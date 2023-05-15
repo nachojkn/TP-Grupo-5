@@ -29,7 +29,7 @@ public class Juego extends InterfaceJuego{
 	double tiempoInicial = System.currentTimeMillis(); //? Tiempo de inicio de juego, referencia
 	double velocidadDestructores = 1.0;
 	double velocidadAsteroides = 1.5;
-	
+	double x;
 
 	//- ========= INTEGERS =========
 	int tiempoMinDispEnem = 3000; //? Tiempo mínimo entre disparos enemigos
@@ -67,7 +67,6 @@ public class Juego extends InterfaceJuego{
 		this.entorno = new Entorno(this, "Lost Galaxian, The Final Frontier - Grupo 5 - v0.1", 800, 600);
 		
 		// Inicializar lo que haga falta para el juego
-		//..
 
 		fondo = Herramientas.cargarImagen("fondo.jpg");
 		
@@ -113,15 +112,17 @@ public class Juego extends InterfaceJuego{
 		for(int i=0; i<asteroides.length; i++)
 			asteroides[i].dibujar(entorno);
 
+
+//* ========== MOVIMIENTO | DESTRUCTORES ============ */
+		for(int i=0;i<destructores.length;i++)
+			destructores[i].descender();
+
 //* ========== MOVIMIENTO | ASTEROIDES ============ */
 		asteroides[0].mover_desdeIzquierda();
 		asteroides[1].mover_desdeIzquierda(); 
 		asteroides[2].mover_desdeDerecha();
 		asteroides[3].mover_desdeDerecha();
 
-//* ========== MOVIMIENTO | DESTRUCTORES ============ */
-		for(int i=0;i<destructores.length;i++)
-			destructores[i].descender();
 		
 //* ========== MOVIMIENTO IZQ | NAVE ASTRO-MEGASHIP ============ */
 		
@@ -134,26 +135,23 @@ public class Juego extends InterfaceJuego{
 			nave.moverDerecha(); 
 
 //* ========== MOVIMIENTO IZQ | PROYECTIL ============ */
-		if(this.proyectil.getX()/2 - this.proyectil.getRadio()/2 > 0 && entorno.estaPresionada(entorno.TECLA_IZQUIERDA))
-			proyectil.moverIzquierda();
+		// if(this.proyectil.getX()/2 - this.proyectil.getRadio()/2 > 0 && entorno.estaPresionada(entorno.TECLA_IZQUIERDA))
+		// 	proyectil.moverIzquierda();
 
 //* ========== MOVIMIENTO DER | PROYECTIL ============ */
-		if(this.proyectil.getX()/2 + this.proyectil.getRadio()/2 < entorno.ancho()/2 && entorno.estaPresionada(entorno.TECLA_DERECHA))
-			proyectil.moverDerecha();			
+		// if(this.proyectil.getX()/2 + this.proyectil.getRadio()/2 < entorno.ancho()/2 && entorno.estaPresionada(entorno.TECLA_DERECHA))
+		// 	proyectil.moverDerecha();			
 		
 
 //* ========== DISPARO | NAVE ASTRO-MEGASHIP ============ */
 		if(entorno.estaPresionada(entorno.TECLA_ESPACIO) || enPantalla){
+			if(!enPantalla){
+				x = nave.getX();
+			}
 			enPantalla =true;
-			double x = nave.getX();
-			double yProy = proyectil.getY();
 			if(enPantalla){
 				proyectil.dibujar(entorno);
 				proyectil.disparoNave(entorno, x);
-				yProy = proyectil.getY();
-			}
-			if(yProy< 0){
-				enPantalla = false;
 			}
 			
 			
@@ -166,7 +164,15 @@ public class Juego extends InterfaceJuego{
 		// }
 
 
-//* ========== FUNCION DE RESETEO ASTEROIDES ============ */
+//* ========== RESETEO | ASTEROIDES ============ */
+		for(int i = 0; i<asteroides.length; i++){
+			if(asteroides[i].getY() >= 600){
+					asteroides[i] = null;
+					this.asteroides[i] = new asteroides(posXIniAsteroides[i],posYIniAsteroides[i],radioAsteroides,velocidadAsteroides);					
+			}
+		}
+		
+//* ========== RESETEO | ASTEROIDES ============ */
 		for(int i = 0; i<asteroides.length; i++){
 			if(asteroides[i].getY() >= 600){
 					asteroides[i] = null;
@@ -174,8 +180,8 @@ public class Juego extends InterfaceJuego{
 			}
 		}
 
-//* ========== FUNCION DE RESETEO PROYECTIL ============ */
-		if(proyectil.getY() <= 0.0){
+//* ========== RESETEO | PROYECTIL ============ */
+		if(proyectil.getY() <= 0){
 			proyectil = null;
 		}
 
