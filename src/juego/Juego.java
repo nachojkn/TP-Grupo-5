@@ -25,7 +25,7 @@ public class Juego extends InterfaceJuego{
 	// Variables y métodos propios de cada grupo
 	//- ========= BOOLEANS =========
 	boolean enPantalla = false; //? Variable usada para controlar cuándo proyectil se encuentra en pantalla
-	
+
 	//- ========= DOUBLES =========	
 	double tiempoInicial = System.currentTimeMillis(); //? Tiempo de inicio de juego, referencia
 	double velocidadDestructores = 1.0;
@@ -41,11 +41,12 @@ public class Juego extends InterfaceJuego{
 
 	int radioAsteroides = 20;
 	
+	int enJuego = 3; //? Variable que determina si el juego sigue en curso
 
 	//- ========= ARRAYS =========
 	private astro_megaship nave;
 
-	private Proyectil proyectil;
+	private Proyectil[] proyectil = new Proyectil[2];
 	private Proyectil[] proyectilesDestructores = new Proyectil[4];
 
 	private asteroides[] asteroides = new asteroides[4];
@@ -75,7 +76,8 @@ public class Juego extends InterfaceJuego{
 		this.nave = new astro_megaship(entorno.ancho()/2, entorno.alto()-100,70,70,4.0);
 		
 		//? Creación de objeto proyectil
-		this.proyectil = new Proyectil(entorno.ancho()/2, entorno.alto()-140,10,5);
+		for(int i =0; i<proyectil.length; i++)
+			this.proyectil[i] = new Proyectil(entorno.ancho()/2, entorno.alto()-140,10,5);
 
 		//? Creación de objetos proyectilDestructores		
 		for(int i = 0; i<destructores.length; i++)
@@ -99,24 +101,26 @@ public class Juego extends InterfaceJuego{
 	 * actualizar el estado interno del juego para simular el paso del tiempo 
 	 * (ver el enunciado del TP para mayor detalle).
 	 */
+	
 	public void tick(){
+		if(enJuego>0){
+			fondo = Herramientas.cargarImagen("fondo.jpg");
 		// Procesamiento de un instante de tiempo
 		// ...
 		entorno.dibujarImagen(fondo, entorno.ancho()/2, entorno.alto()/2, 0);
 		nave.dibujar(entorno);
 
-//* ========== DIBUJO | DESTRUCTORES ============ */
-		for(int i=0; i<destructores.length; i++)
-			destructores[i].dibujar(entorno);
+//* ========== MOVIMIENTO Y DIBUJO | DESTRUCTORES ============ */
+		for(int i=0;i<destructores.length;i++){
+		destructores[i].dibujar(entorno);
+		destructores[i].descender();
+		}
 
 //* ========== DIBUJO | ASTEROIDES ============ */
 		for(int i=0; i<asteroides.length; i++)
 			asteroides[i].dibujar(entorno);
 
 
-//* ========== MOVIMIENTO | DESTRUCTORES ============ */
-		for(int i=0;i<destructores.length;i++)
-			destructores[i].descender();
 
 //* ========== MOVIMIENTO | ASTEROIDES ============ */
 		asteroides[0].mover_desdeIzquierda();
@@ -133,29 +137,19 @@ public class Juego extends InterfaceJuego{
 //* ========== MOVIMIENTO DER | NAVE ASTRO-MEGASHIP ============ */
 		
 		if(this.nave.getX() + this.nave.getAncho()/2 < entorno.ancho() && entorno.estaPresionada(entorno.TECLA_DERECHA))
-			nave.moverDerecha(); 
-
-//* ========== MOVIMIENTO IZQ | PROYECTIL ============ */
-		// if(this.proyectil.getX()/2 - this.proyectil.getRadio()/2 > 0 && entorno.estaPresionada(entorno.TECLA_IZQUIERDA))
-		// 	proyectil.moverIzquierda();
-
-//* ========== MOVIMIENTO DER | PROYECTIL ============ */
-		// if(this.proyectil.getX()/2 + this.proyectil.getRadio()/2 < entorno.ancho()/2 && entorno.estaPresionada(entorno.TECLA_DERECHA))
-		// 	proyectil.moverDerecha();			
+			nave.moverDerecha(); 	
 		
 
 //* ========== DISPARO | NAVE ASTRO-MEGASHIP ============ */
-		if(entorno.estaPresionada(entorno.TECLA_ESPACIO) || enPantalla){
-			if(!enPantalla){
-				x = nave.getX();
+		if(entorno.estaPresionada(entorno.TECLA_ESPACIO) || enPantalla) {
+			enPantalla = true;
+			if(enPantalla) {
+				proyectil[0].dibujar(entorno);
+				proyectil[0].disparoNave(entorno);	
 			}
-			enPantalla =true;
-			if(enPantalla){
-				proyectil.dibujar(entorno);
-				proyectil.disparoNave(entorno, x);
+			else if(proyectil[0].getY() <=0) {
+				enPantalla = false;
 			}
-			
-			
 		}
 
 //* ========== DISPARO | RANDOM DESTRUCTORES ESTELARES ============ */
@@ -167,30 +161,51 @@ public class Juego extends InterfaceJuego{
 
 //* ========== RESETEO | ASTEROIDES ============ */
 		for(int i = 0; i<asteroides.length; i++){
-			if(asteroides[i].getY() >= 600){
+			if(asteroides[i].getY() >= entorno.ancho()){
 					asteroides[i] = null;
 					this.asteroides[i] = new asteroides(posXIniAsteroides[i],posYIniAsteroides[i],radioAsteroides,velocidadAsteroides);					
 			}
 		}
 		
-//* ========== RESETEO | ASTEROIDES ============ */
-		for(int i = 0; i<asteroides.length; i++){
-			if(asteroides[i].getY() >= 600){
-					asteroides[i] = null;
-					this.asteroides[i] = new asteroides(posXIniAsteroides[i],posYIniAsteroides[i],radioAsteroides,velocidadAsteroides);					
+
+//* ========== RESETEO | PROYECTIL ============ */
+		for(int i=0; i<proyectil.length; i++) {
+			if(proyectil[i].getY() <= 0){
+				proyectil[i] = null;
+				this.proyectil[i] = new Proyectil(this.nave.getX(), this.nave.getY()-50,10,5);
+				enPantalla = false;
 			}
 		}
 
-//* ========== RESETEO | PROYECTIL ============ */
-		if(proyectil.getY() <= 0){
-			proyectil = null;
+//* ========== RESETEO | DESTRUCTORES ============ */
+		for(int i =0; i<destructores.length; i++) {
+			if(destructores[i].getY() > entorno.alto()) {
+				destructores[i] = null;
+				this.destructores[i] = new destructores_estelares(posXIniDestructores[i], posYIniDestructores[i], altoDestructores, anchoDestructores, velocidadDestructores);
+			}
+		}		
+
+//* ========== COLISION ASTEORIDES CON NAVE ============ */
+		for(int i =0; i<asteroides.length; i++)
+			if(asteroides[i].chocasteCon(nave) == true) {
+				System.out.println("COLISION");
+				asteroides[i] = null;
+				this.asteroides[i] = new asteroides(posXIniAsteroides[i],posYIniAsteroides[i],radioAsteroides,velocidadAsteroides);		
+				enJuego--;
+			}
 		}
 
-
-
-
+		if(enJuego == 0){
+			
+			fondo = Herramientas.cargarImagen("gameover.jpg");
+			entorno.dibujarImagen(fondo, entorno.ancho()/2, entorno.alto()/2, 0);
+			if(entorno.estaPresionada(entorno.TECLA_ESPACIO)){
+			
+				enJuego = 3;
+			}
+		}
 	}
-	
+
 		@SuppressWarnings("unused")
 		public static void main(String[] args)
 		{

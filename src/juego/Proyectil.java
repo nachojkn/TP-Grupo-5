@@ -29,9 +29,8 @@ public class Proyectil {
 		x +=velocidad;
 	}
 	
-	public void disparoNave(Entorno e, double posX){
+	public void disparoNave(Entorno e){
 			y -= velocidad;
-			x = posX;
 	}
 
 	public void disparoDestructor(Entorno e) {
