@@ -65,5 +65,15 @@ public class destructores_estelares {
 		this.v_movimiento = v_movimiento;
 	}
 	
-	
+	public void descender(){
+		this.y += v_movimiento;
+		// if(this.x == 
+		// if(this.x>this.ancho/2 || this.x < 600-this.ancho/2){
+		// 	this.x += (int)(Math.random()*(5)+(int)(Math.random()*-5));
+		// }else if(this.x>this.ancho/2){
+		// 	this.x += 10;
+		// }else{
+		// 	this.x -= 10;
+		// }
+	}
 }
