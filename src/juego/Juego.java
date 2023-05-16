@@ -25,6 +25,7 @@ public class Juego extends InterfaceJuego{
 	// Variables y métodos propios de cada grupo
 	//- ========= BOOLEANS =========
 	boolean enPantalla = false; //? Variable usada para controlar cuándo proyectil se encuentra en pantalla
+	boolean cambioDireccion = false; //? Cambia la dirección de movimiento en x de destructores
 
 	//- ========= DOUBLES =========	
 	double tiempoInicial = System.currentTimeMillis(); //? Tiempo de inicio de juego, referencia
@@ -57,7 +58,8 @@ public class Juego extends InterfaceJuego{
 
 	private destructores_estelares[] destructores = new destructores_estelares[4];
 	//? Posición inicial en X de cada Destructor
-	double[] posXIniDestructores = {100,300,500,700};
+	// double[] posXIniDestructores = {100,300,500,700};
+	double[] posXIniDestructores = {(int)(Math.random()*(175-50+1)+50),(int)(Math.random()*(375-250+1)+250),(int)(Math.random()*(575-450+1)+450),(int)(Math.random()*(775-650+1)+650)};
 	//? Posición inicial en Y de cada Destructor
 	double[] posYIniDestructores = {10,10,10,10};
 	
@@ -113,7 +115,13 @@ public class Juego extends InterfaceJuego{
 //* ========== MOVIMIENTO Y DIBUJO | DESTRUCTORES ============ */
 		for(int i=0;i<destructores.length;i++){
 		destructores[i].dibujar(entorno);
-		destructores[i].descender();
+		destructores[i].descender(cambioDireccion);
+		}
+
+		if(destructores[3].getX() >= 750){
+			cambioDireccion = true;
+		}else if(destructores[0].getX() <= 50){
+			cambioDireccion = false;
 		}
 
 //* ========== DIBUJO | ASTEROIDES ============ */
@@ -152,7 +160,18 @@ public class Juego extends InterfaceJuego{
 			}
 		}
 
-//* ========== DISPARO | RANDOM DESTRUCTORES ESTELARES ============ */
+//* ========== DISPARO | DESTRUCTORES ESTELARES ============ */
+		if(System.currentTimeMillis()-tiempoInicial % 3000 != 0) {
+			for(int i=0;i<proyectilesDestructores.length;i++){
+				proyectilesDestructores[i].dibujar(entorno);
+				proyectilesDestructores[i].disparoNave(entorno);	
+				if(proyectilesDestructores[i].getY() >=entorno.alto()) {
+					proyectilesDestructores[i] = null;
+				}
+			}
+			tiempoInicial+=3000;
+
+		}
 		// if((System.currentTimeMillis()-tiempoInicial)==(int)(Math.random() * (tiempoMaxDispEnem-tiempoMinDispEnem+1)+tiempoMinDispEnem) || System.currentTimeMillis()+tiempoInicial == tiempoMaxDispEnem){
 		// 	proyectil.dibujar(entorno);
 		// 	proyectil.disparoDestructor(entorno);
@@ -200,7 +219,6 @@ public class Juego extends InterfaceJuego{
 			fondo = Herramientas.cargarImagen("gameover.jpg");
 			entorno.dibujarImagen(fondo, entorno.ancho()/2, entorno.alto()/2, 0);
 			if(entorno.estaPresionada(entorno.TECLA_ESPACIO)){
-			
 				enJuego = 3;
 			}
 		}

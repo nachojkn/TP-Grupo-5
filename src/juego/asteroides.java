@@ -25,7 +25,8 @@ public class asteroides {
 	public boolean chocasteCon(astro_megaship nave) {
 		return (this.getX() > nave.getX() - nave.getAncho() / 2) &&
 				(this.getX() < nave.getX() + nave.getAncho() / 2) &&
-				(this.getY() > nave.getY() - nave.getAlto()/2); 
+				(this.getY() > nave.getY() - nave.getAlto()/2) &&
+				(this.getY() < nave.getY() + nave.getAlto()/2); 
 	}
 	
 	public void mover_desdeIzquierda() {
