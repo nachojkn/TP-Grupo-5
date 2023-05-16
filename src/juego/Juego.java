@@ -47,8 +47,8 @@ public class Juego extends InterfaceJuego{
 	//- ========= ARRAYS =========
 	private astro_megaship nave;
 
-	private Proyectil[] proyectil = new Proyectil[2];
-	private Proyectil[] proyectilesDestructores = new Proyectil[4];
+	private Proyectil[] proyectil = new Proyectil[2]; //! NO PUEDE SER LISTA, TIENE QUE SER UN PROYECTIL
+	private Proyectil[] proyectilesDestructores = new Proyectil[4]; //! HACER QUE CADA DESTRUCTOR TENGA UN PROPIO PROYECTIL
 
 	private asteroides[] asteroides = new asteroides[4];
 	//? Posición inicial en X de cada asteroide
@@ -187,7 +187,7 @@ public class Juego extends InterfaceJuego{
 		}
 		
 
-//* ========== RESETEO | PROYECTIL ============ */
+//* ========== RESETEO | PROYECTIL ============ TIENE QUE SER UN SOLO PROYECTIL*/
 		for(int i=0; i<proyectil.length; i++) {
 			if(proyectil[i].getY() <= 0){
 				proyectil[i] = null;

@@ -22,7 +22,7 @@ public class destructores_estelares {
 	}
 	
 	public void dibujar(Entorno e) {
-		e.dibujarRectangulo(x, y, ancho, alto, v_movimiento, Color.orange);
+		e.dibujarRectangulo(x, y, ancho, alto, 0, Color.orange);
 	}
 
 	public double getX() {
