@@ -31,8 +31,6 @@ public class asteroides {
 	y += velocidad; //
 	x -= velocidad; // 
 }
-	
-
 
 	public double getX() {
 		return x;
