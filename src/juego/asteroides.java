@@ -22,6 +22,13 @@ public class asteroides {
 		e.dibujarCirculo(x, y, radio*2, Color.red);
 	}
 	
+	public boolean chocasteCon(astro_megaship nave) {
+		return (this.getX() > nave.getX() - nave.getAncho() / 2) &&
+				(this.getX() < nave.getX() + nave.getAncho() / 2) &&
+				(this.getY() > nave.getY() - nave.getAlto()/2) &&
+				(this.getY() < nave.getY() + nave.getAlto()/2); 
+	}
+	
 	public void mover_desdeIzquierda() {
 		y += velocidad; //va de 0 a 600 a la velocidad del asteroide
 		x += velocidad; // va de 0 a 800 a la velocidad del asteroide
