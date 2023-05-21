@@ -24,7 +24,6 @@ public class Juego extends InterfaceJuego{
 	
 	// Variables y métodos propios de cada grupo
 	//- ========= BOOLEANS =========
-	boolean enPantalla = false; //? Variable usada para controlar cuándo proyectil se encuentra en pantalla
 	boolean cambioDireccion = false; //? Cambia la dirección de movimiento en x de destructores
 
 	//- ========= DOUBLES =========	
@@ -47,14 +46,13 @@ public class Juego extends InterfaceJuego{
 	//- ========= ARRAYS =========
 	private astro_megaship nave;
 
-	private Proyectil[] proyectil = new Proyectil[2]; //! NO PUEDE SER LISTA, TIENE QUE SER UN PROYECTIL
-	private Proyectil[] proyectilesDestructores = new Proyectil[4]; //! HACER QUE CADA DESTRUCTOR TENGA UN PROPIO PROYECTIL
+	private Proyectil proyectil;
 
 	private asteroides[] asteroides = new asteroides[4];
 	//? Posición inicial en X de cada asteroide
-	double[] posXIniAsteroides = {0,200,800,500};
+	double[] posXIniAsteroides = {0,800,200,500};
 	//? Posición inicial en Y de cada asteroide
-	double[] posYIniAsteroides = {0,250,50,200};
+	double[] posYIniAsteroides = {0,50,250,200};
 
 	private destructores_estelares[] destructores = new destructores_estelares[4];
 	//? Posición inicial en X de cada Destructor
@@ -77,13 +75,13 @@ public class Juego extends InterfaceJuego{
 		//? Creación de objeto nave
 		this.nave = new astro_megaship(entorno.ancho()/2, entorno.alto()-100,70,70,4.0);
 		
-		//? Creación de objeto proyectil
-		for(int i =0; i<proyectil.length; i++)
-			this.proyectil[i] = new Proyectil(entorno.ancho()/2, entorno.alto()-140,10,5);
+		// //? Creación de objeto proyectil
+		// for(int i =0; i<proyectil.length; i++)
+		// 	this.proyectil[i] = new Proyectil(entorno.ancho()/2, entorno.alto()-140,10,5);
 
 		//? Creación de objetos proyectilDestructores		
-		for(int i = 0; i<destructores.length; i++)
-			this.proyectilesDestructores[i] = new Proyectil(entorno.ancho()/2, entorno.alto()-140,10,5);		
+		// for(int i = 0; i<destructores.length; i++)
+		// 	this.proyectilesDestructores[i] = new Proyectil(entorno.ancho()/2, entorno.alto()-140,10,5);		
 
 		//? Creación de objetos destructores
 		for(int i = 0; i<destructores.length; i++)
@@ -126,15 +124,20 @@ public class Juego extends InterfaceJuego{
 
 //* ========== DIBUJO | ASTEROIDES ============ */
 		for(int i=0; i<asteroides.length; i++)
-			asteroides[i].dibujar(entorno);
+			if(asteroides[i] != null)
+				asteroides[i].dibujar(entorno);
 
 
 
 //* ========== MOVIMIENTO | ASTEROIDES ============ */
-		asteroides[0].mover_desdeIzquierda();
-		asteroides[1].mover_desdeIzquierda(); 
-		asteroides[2].mover_desdeDerecha();
-		asteroides[3].mover_desdeDerecha();
+		for(int i=0; i<asteroides.length;i++){
+			if(i % 2 == 0){
+				asteroides[i].mover_desdeIzquierda();
+			}else{
+				asteroides[i].mover_desdeDerecha();
+			}
+	
+		}
 
 		
 //* ========== MOVIMIENTO IZQ | NAVE ASTRO-MEGASHIP ============ */
@@ -149,29 +152,26 @@ public class Juego extends InterfaceJuego{
 		
 
 //* ========== DISPARO | NAVE ASTRO-MEGASHIP ============ */
-		if(entorno.estaPresionada(entorno.TECLA_ESPACIO) || enPantalla) {
-			enPantalla = true;
-			if(enPantalla) {
-				proyectil[0].dibujar(entorno);
-				proyectil[0].disparoNave(entorno);	
-			}
-			else if(proyectil[0].getY() <=0) {
-				enPantalla = false;
-			}
+		if(proyectil == null && entorno.sePresiono(entorno.TECLA_ESPACIO)) {
+			this.proyectil = new Proyectil(this.nave.getX(),this.nave.getY()-50,10,7);
 		}
 
+		if(proyectil != null){
+			this.proyectil.dibujar(entorno);
+			this.proyectil.disparoNave(entorno);
+		}
 //* ========== DISPARO | DESTRUCTORES ESTELARES ============ */
-		if(System.currentTimeMillis()-tiempoInicial % 3000 != 0) {
-			for(int i=0;i<proyectilesDestructores.length;i++){
-				proyectilesDestructores[i].dibujar(entorno);
-				proyectilesDestructores[i].disparoNave(entorno);	
-				if(proyectilesDestructores[i].getY() >=entorno.alto()) {
-					proyectilesDestructores[i] = null;
-				}
-			}
-			tiempoInicial+=3000;
+		// if(System.currentTimeMillis()-tiempoInicial % 3000 != 0) {
+		// 	for(int i=0;i<proyectilesDestructores.length;i++){
+		// 		proyectilesDestructores[i].dibujar(entorno);
+		// 		proyectilesDestructores[i].disparoNave(entorno);	
+		// 		if(proyectilesDestructores[i].getY() >=entorno.alto()) {
+		// 			proyectilesDestructores[i] = null;
+		// 		}
+		// 	}
+		// 	tiempoInicial+=3000;
 
-		}
+		// }
 		// if((System.currentTimeMillis()-tiempoInicial)==(int)(Math.random() * (tiempoMaxDispEnem-tiempoMinDispEnem+1)+tiempoMinDispEnem) || System.currentTimeMillis()+tiempoInicial == tiempoMaxDispEnem){
 		// 	proyectil.dibujar(entorno);
 		// 	proyectil.disparoDestructor(entorno);
@@ -187,14 +187,11 @@ public class Juego extends InterfaceJuego{
 		}
 		
 
-//* ========== RESETEO | PROYECTIL ============ TIENE QUE SER UN SOLO PROYECTIL*/
-		for(int i=0; i<proyectil.length; i++) {
-			if(proyectil[i].getY() <= 0){
-				proyectil[i] = null;
-				this.proyectil[i] = new Proyectil(this.nave.getX(), this.nave.getY()-50,10,5);
-				enPantalla = false;
+//* ========== RESETEO | PROYECTIL ============ */
+			if(proyectil != null && proyectil.getY() <= 0){
+				proyectil = null;
 			}
-		}
+
 
 //* ========== RESETEO | DESTRUCTORES ============ */
 		for(int i =0; i<destructores.length; i++) {
