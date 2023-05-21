@@ -18,15 +18,7 @@ public class Proyectil {
 	}
 	
 	public void dibujar(Entorno e) {
-		e.dibujarCirculo(x, y, radio*2, Color.magenta);
-	}
-	
-	public void moverIzquierda() {
-		x -= velocidad;
-	}
-	
-	public void moverDerecha() {
-		x +=velocidad;
+		e.dibujarCirculo(x, y, radio, Color.magenta);
 	}
 	
 	public void disparoNave(Entorno e){

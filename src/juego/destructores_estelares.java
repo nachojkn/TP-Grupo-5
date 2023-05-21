@@ -65,12 +65,30 @@ public class destructores_estelares {
 		this.v_movimiento = v_movimiento;
 	}
 	
-	public void descender(boolean cambioDireccion){
-		this.y += v_movimiento;
-		if(!cambioDireccion){
-			this.x += v_movimiento;
-		}else{
-			this.x -= v_movimiento;
+	public void descenderDer(boolean cambioDireccion){
+		y += v_movimiento;
+		if(!cambioDireccion) {
+			x +=v_movimiento;
+		}
+		else {
+			x -= v_movimiento;
 		}
 	}
+	
+	public void descenderIzq(boolean cambioDireccion){
+		y += v_movimiento;
+		if(!cambioDireccion) {
+			x -=v_movimiento;
+		}
+		else {
+			x += v_movimiento;
+		}
+	}
+	
+	public boolean chocasteCon(Proyectil proyectil) {
+		return (this.getX() > proyectil.getX() - proyectil.getRadio()*2) &&
+				(this.getX() < proyectil.getX() + proyectil.getRadio()*2) &&
+				(this.getY() < proyectil.getY() + proyectil.getRadio()*2) && 
+				(this.getY()> proyectil.getY() - proyectil.getRadio()*2); 
+		}
 }

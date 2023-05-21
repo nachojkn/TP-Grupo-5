@@ -8,7 +8,6 @@ public class asteroides {
 	private double x;
 	private double y;
 	private double radio;
-	private double angulo;
 	private double velocidad;
 	
 	public asteroides(double x, double y, double radio, double velocidad) {
@@ -19,14 +18,21 @@ public class asteroides {
 	}
 	
 	public void dibujar(Entorno e) {
-		e.dibujarCirculo(x, y, radio*2, Color.red);
+		e.dibujarCirculo(x, y, radio, Color.red);
 	}
 	
 	public boolean chocasteCon(astro_megaship nave) {
 		return (this.getX() > nave.getX() - nave.getAncho() / 2) &&
 				(this.getX() < nave.getX() + nave.getAncho() / 2) &&
-				(this.getY() > nave.getY() - nave.getAlto()/2) &&
-				(this.getY() < nave.getY() + nave.getAlto()/2); 
+				(this.getY() < nave.getY() + nave.getAlto()/2) && 
+				(this.getY()> nave.getY() - nave.getAlto() /2); 
+	}
+	
+	public boolean chocasteCon(Proyectil proyectil) {
+		return (this.getX() > proyectil.getX() - proyectil.getRadio()*2) &&
+				(this.getX() < proyectil.getX() + proyectil.getRadio()*2) &&
+				(this.getY() < proyectil.getY() + proyectil.getRadio()*2) && 
+				(this.getY()> proyectil.getY() - proyectil.getRadio()*2);
 	}
 	
 	public void mover_desdeIzquierda() {
@@ -63,13 +69,6 @@ public class asteroides {
 		this.radio = radio;
 	}
 
-	public double getAngulo() {
-		return angulo;
-	}
-
-	public void setAngulo(double angulo) {
-		this.angulo = angulo;
-	}
 
 	public double getVelocidad() {
 		return velocidad;
