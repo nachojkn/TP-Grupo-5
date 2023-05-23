@@ -1,10 +1,9 @@
 package juego;
 
 
-
 import javax.print.event.PrintJobEvent;
 
-import org.jcp.xml.dsig.internal.dom.DOMXMLSignature.DOMSignatureValue;
+// import org.jcp.xml.dsig.internal.dom.DOMXMLSignature.DOMSignatureValue;
 
 import java.lang.Math; //? Para números random
 import java.awt.Image; //? Para fondo de pantalla
@@ -12,8 +11,6 @@ import java.awt.Image; //? Para fondo de pantalla
 import entorno.Entorno;
 import entorno.Herramientas;
 import entorno.InterfaceJuego;
-
-
 
 public class Juego extends InterfaceJuego{
 	// El objeto Entorno que controla el tiempo y otros

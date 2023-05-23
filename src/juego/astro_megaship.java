@@ -13,7 +13,7 @@ public class astro_megaship {
 	private int alto;
 	private int ancho;
 	private double desplazamiento;
-	private Image img_nave;
+	// private Image img_nave;
 //	public Image im_Nave = Herramientas.cargarImagen("Image_nave.png");
 	
 	public astro_megaship(double x, double y, int alto, int ancho , double desplazamiento) {
